@@ -60,7 +60,9 @@ exports.Subdomain = class Subdomain
       new constructor subdomain, address if constructor = @for subdomain
 
   @for: (subdomain = "") ->
-    if IPAddressSubdomain.pattern.test subdomain
+    if MappedSubdomain.pattern.test subdomain
+      MappedSubdomain
+    else if IPAddressSubdomain.pattern.test subdomain
       IPAddressSubdomain
     else if EncodedSubdomain.pattern.test subdomain
       EncodedSubdomain
@@ -75,6 +77,14 @@ exports.Subdomain = class Subdomain
     @length is 0
 
   getAddress: ->
+    @address
+
+exports.MappedSubdomain = class MappedSubdomain extends Subdomain
+  @pattern = /// (^|\.) .*
+  $ ///
+
+  getAddress: ->
+    console.log "getAddress", @labels
     @address
 
 class IPAddressSubdomain extends Subdomain
