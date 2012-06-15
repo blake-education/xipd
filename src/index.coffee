@@ -60,12 +60,10 @@ exports.Subdomain = class Subdomain
       new constructor subdomain, address if constructor = @for subdomain
 
   @for: (subdomain = "") ->
-    if MappedSubdomain.pattern.test subdomain
-      MappedSubdomain
-    else if IPAddressSubdomain.pattern.test subdomain
+    if IPAddressSubdomain.pattern.test subdomain
       IPAddressSubdomain
-    else if EncodedSubdomain.pattern.test subdomain
-      EncodedSubdomain
+    else if MappedSubdomain.pattern.test subdomain
+      MappedSubdomain
     else
       Subdomain
 
@@ -95,26 +93,3 @@ class IPAddressSubdomain extends Subdomain
 
   getAddress: ->
     @labels.slice(-4).join "."
-
-class EncodedSubdomain extends Subdomain
-  @pattern = /(^|\.)[a-z0-9]{1,7}$/
-
-  getAddress: ->
-    decode @labels[@length - 1]
-
-exports.encode = encode = (ip) ->
-  value = 0
-  for byte, index in ip.split "."
-    value += parseInt(byte, 10) << (index * 8)
-  (value >>> 0).toString 36
-
-PATTERN = /^[a-z0-9]{1,7}$/
-
-exports.decode = decode = (string) ->
-  return unless PATTERN.test string
-  value = parseInt string, 36
-  ip = []
-  for i in [1..4]
-    ip.push value & 0xFF
-    value >>= 8
-  ip.join "."
