@@ -8,6 +8,12 @@ exports.Server = class Server extends dnsserver.Server
   NS_C_IN           = 1
   NS_RCODE_NXDOMAIN = 3
 
+  nameToEnum = (name) ->
+    {
+      "A": NS_T_A
+      "CNAME": NS_T_CNAME
+    }[name] || throw("unknown name #{name}")
+
   constructor: (domain, @rootAddress) ->
     super
     @domain = domain.toLowerCase()
@@ -19,7 +25,8 @@ exports.Server = class Server extends dnsserver.Server
     subdomain = @extractSubdomain question.name
 
     if subdomain? and isARequest question
-      res.addRR question.name, NS_T_A, NS_C_IN, 600, subdomain.getAddress()
+      responseType = nameToEnum(subdomain.getResponseType())
+      res.addRR question.name, responseType, NS_C_IN, 600, subdomain.getAddress()
     else if subdomain?.isEmpty() and isNSRequest question
       res.addRR question.name, NS_T_SOA, NS_C_IN, 600, @soa, true
     else
@@ -77,13 +84,18 @@ exports.Subdomain = class Subdomain
   getAddress: ->
     @address
 
+  getResponseType: -> "A"
+
 exports.MappedSubdomain = class MappedSubdomain extends Subdomain
   @pattern = /// (^|\.) .*
   $ ///
 
   getAddress: ->
-    console.log "getAddress", @labels
-    @address
+    lastLabel = @labels.slice(-1)[0]
+    cname = MappedSubdomain.db[lastLabel]
+    cname
+
+  getResponseType: -> "CNAME"
 
 class IPAddressSubdomain extends Subdomain
   @pattern = /// (^|\.)

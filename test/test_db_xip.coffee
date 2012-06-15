@@ -7,8 +7,10 @@ module.exports =
 
     subdomain = "ci2"
     cname = "ec2.etc"
-    xip.MappedSubdomain.db = {subdomain: cname}
+    db = xip.MappedSubdomain.db = {}
+    db[subdomain] = cname
 
+    # XXX for this testing approach to work, server needs to resolve CNAME-mapped A's, Hmmm.
     createServer (port, done) ->
       hostname = "#{subdomain}.xip.io"
       digShort port, "A", hostname, (result) ->
