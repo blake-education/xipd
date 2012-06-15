@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
 var xip = require('..');
+var aws = require('../lib/aws');
 var argv = process.argv;
 
+console.log("xip", aws)
+
 if (argv.length < 3) {
-  console.error("usage: xipd <domain> [address]");
+  console.error("usage: xipd <domain> [address] [port]");
   process.exit(1);
 }
 
@@ -12,6 +15,13 @@ var domain = argv[2];
 var address = argv[3] || "127.0.0.1";
 var port = argv[4] || 5300;
 var server = xip.createServer(domain, address);
-server.bind(port);
 
-console.log("xipd listening on port =", port, " domain =", domain, "address =", address);
+console.log("building initial aws db");
+aws.buildDb( function(err, db) {
+  if(err) throw(err);
+  console.log("aws db", db);
+  xip.MappedSubdomain.db = db;
+  server.bind(port);
+  console.log("xipd listening on port =", port, "domain =", domain, "address =", address);
+})
+
