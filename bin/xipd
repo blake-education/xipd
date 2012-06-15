@@ -10,7 +10,8 @@ if (argv.length < 3) {
 
 var domain = argv[2];
 var address = argv[3] || "127.0.0.1";
+var port = argv[4] || 5300;
 var server = xip.createServer(domain, address);
-server.bind(5300);
+server.bind(port);
 
-console.log("xipd listening on port 5300: domain =", domain, "address =", address);
+console.log("xipd listening on port =", port, " domain =", domain, "address =", address);
