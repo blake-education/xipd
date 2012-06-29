@@ -28,6 +28,6 @@ exports.buildDb = (done) ->
       for resSet in result.reservationSet.item
         instance = resSet.instancesSet.item
         name = instanceNames[instance.instanceId]
-        db[name] = instance.dnsName
+        db[name] = instance.ipAddress
 
       done(null, db)

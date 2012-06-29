@@ -95,7 +95,7 @@ exports.MappedSubdomain = class MappedSubdomain extends Subdomain
     cname = MappedSubdomain.db[lastLabel]
     cname
 
-  getResponseType: -> "CNAME"
+  getResponseType: -> "A"
 
 class IPAddressSubdomain extends Subdomain
   @pattern = /// (^|\.)

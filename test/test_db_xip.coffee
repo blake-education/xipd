@@ -6,14 +6,13 @@ module.exports =
     test.expect 1
 
     subdomain = "ci2"
-    cname = "ec2.etc"
+    ip = "10.2.3.4"
     db = xip.MappedSubdomain.db = {}
-    db[subdomain] = cname
+    db[subdomain] = ip
 
-    # XXX for this testing approach to work, server needs to resolve CNAME-mapped A's, Hmmm.
     createServer (port, done) ->
       hostname = "#{subdomain}.xip.io"
       digShort port, "A", hostname, (result) ->
-        test.equal cname, result
+        test.equal ip, result
         done test.done
 
