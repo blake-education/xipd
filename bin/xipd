@@ -4,8 +4,6 @@ var xip = require('..');
 var aws = require('../lib/aws');
 var argv = process.argv;
 
-console.log("xip", aws)
-
 if (argv.length < 3) {
   console.error("usage: xipd <domain> [address] [port]");
   process.exit(1);
