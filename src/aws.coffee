@@ -6,6 +6,7 @@ ec2 = aws.createEC2Client(config.accessKeyId, config.secretAccessKey, {version: 
 
 
 exports.buildDb = (done) ->
+  console.log "[aws] - building db"
 
   tagQuery =
     "Filter.1.Name": "key"
@@ -30,4 +31,11 @@ exports.buildDb = (done) ->
         name = instanceNames[instance.instanceId]
         db[name] = instance.ipAddress
 
+      console.log "[aws] - done"
       done(null, db)
+
+
+
+exports.updateDb = (cb) ->
+  setInterval (=> exports.buildDb(cb)), config.updateInterval * 1000
+

@@ -19,6 +19,12 @@ aws.buildDb( function(err, db) {
   if(err) throw(err);
   console.log("aws db", db);
   xip.MappedSubdomain.db = db;
+
+  // periodically re-build the db
+  aws.updateDb(function (err, db) {
+    xip.MappedSubdomain.db = db;
+  });
+
   server.bind(port);
   console.log("xipd listening on port =", port, "domain =", domain, "address =", address);
 })
