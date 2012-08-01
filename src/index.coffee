@@ -24,6 +24,8 @@ exports.Server = class Server extends dnsserver.Server
     question  = req.question
     subdomain = @extractSubdomain question.name
 
+    console.log "req", req
+
     if subdomain? and isARequest question
       responseType = nameToEnum(subdomain.getResponseType())
       res.addRR question.name, responseType, NS_C_IN, 600, subdomain.getAddress()
