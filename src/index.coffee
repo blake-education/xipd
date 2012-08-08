@@ -24,12 +24,17 @@ exports.Server = class Server extends dnsserver.Server
     question  = req.question
     subdomain = @extractSubdomain question.name
 
-    console.log "req", req
+    console.log "question: ", question.name
 
     if subdomain? and isARequest question
+      console.log "A request for subdomain", subdomain
+
       responseType = nameToEnum(subdomain.getResponseType())
       res.addRR question.name, responseType, NS_C_IN, 600, subdomain.getAddress()
+
     else if subdomain?.isEmpty() and isNSRequest question
+      console.log "NS request"
+
       res.addRR question.name, NS_T_SOA, NS_C_IN, 600, @soa, true
     else
       res.header.rcode = NS_RCODE_NXDOMAIN
