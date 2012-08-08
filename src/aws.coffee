@@ -25,13 +25,17 @@ exports.buildDb = (done) ->
     ec2.call "DescribeInstances", instanceQuery, (err, result) ->
       return done(err) if err
 
+      replaceRe = /[ _]+/g
       db = {}
       for resSet in result.reservationSet.item
         instance = resSet.instancesSet.item
-        name = instanceNames[instance.instanceId]
-        db[name] = instance.ipAddress
 
-      console.log "[aws] - done"
+        name = instanceNames[instance.instanceId]
+        dnsName = name.replace(replaceRe, '-')
+
+        db[dnsName] = instance.ipAddress
+
+      console.log "[aws] - done", db
       done(null, db)
 
 
