@@ -35,7 +35,7 @@ exports.buildDb = (done) ->
 
         db[dnsName] = instance.ipAddress
 
-      console.log "[aws] - done", db
+      console.log "[aws] - done"
       done(null, db)
 
 
