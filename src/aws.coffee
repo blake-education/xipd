@@ -31,9 +31,9 @@ exports.buildDb = (done) ->
         instance = resSet.instancesSet.item
 
         name = instanceNames[instance.instanceId]
-        dnsName = name.replace(replaceRe, '-')
-
-        db[dnsName] = instance.ipAddress
+        if name
+          dnsName = name.replace(replaceRe, '-')
+          db[dnsName] = instance.ipAddress
 
       console.log "[aws] - done"
       done(null, db)
